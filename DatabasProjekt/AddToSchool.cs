@@ -14,7 +14,7 @@ namespace DatabasProjekt
     {
         public void AddMenu()
         {
-            Menu menu = new(["Lägg till lärare", "Lägg till elev", "Exit"], "Hantera Skola");
+            Menu menu = new(["Lägg till lärare", "Lägg till elev", "Uppdatera Elev", "Tillbaka"], "Hantera Skola");
             switch (menu.MenuRun())
             {
                 case 0:
@@ -24,7 +24,7 @@ namespace DatabasProjekt
                     AddStudent();
                     break;
                 case 2:
-                    Environment.Exit(0);
+                    UpdateStudent();
                     break;
             }
         }
@@ -164,6 +164,7 @@ namespace DatabasProjekt
             else
             {
                 Console.WriteLine("Något gick fel");
+                Console.ReadLine();
                 return null;
             }
         }
@@ -220,6 +221,71 @@ namespace DatabasProjekt
                     return false;
                 }
 
+            }
+        }
+        private void UpdateStudent()
+        {
+            using (SchoolDbContext context = new())
+            {
+                int studentId = GetStudentId();
+                if (studentId == 0)
+                {
+                    return;
+                }
+
+                var student = context.Students.FirstOrDefault(s => s.StudentId == studentId);
+                if (student == null)
+                {
+                    Console.WriteLine("Studenten hittades inte.");
+                    return;
+                }
+
+                Console.WriteLine("Förnamn: ");
+                string fName = Console.ReadLine();
+                if (!string.IsNullOrEmpty(fName))
+                {
+                    student.FirstName = fName;
+                }
+
+                Console.WriteLine("Efternamn: ");
+                string lName = Console.ReadLine();
+                if (!string.IsNullOrEmpty(lName))
+                {
+                    student.LastName = lName;
+                }
+
+                Console.WriteLine("Klass: ");
+                if (int.TryParse(Console.ReadLine(), out int classId))
+                {
+                    student.FkClassId = classId;
+                }
+                else
+                {
+                    Console.WriteLine("Använd ett giltigt nummer");
+                }
+
+                Console.WriteLine("Kön: ");
+                string gender = Console.ReadLine();
+                if (!string.IsNullOrEmpty(gender))
+                {
+                    student.Gender = gender;
+                }
+
+                context.SaveChanges();
+                Console.WriteLine("Studentens information har uppdaterats.");
+            }
+        }
+        private int GetStudentId()
+        {
+            Console.WriteLine("Skriv in student Id: "); // Get student by student id
+            if (!int.TryParse(Console.ReadLine(), out int studentId))
+            {
+                Console.WriteLine("Ange ett giltigt nummer");
+                return 0;
+            }
+            else
+            {
+                return studentId;
             }
         }
     }

@@ -13,7 +13,7 @@ namespace DatabasProjekt
     {
         public void ReadMenu()
         {
-            Menu menu = new(["Visa Anställda", "Visa elever", "Visa kurser"], "Visa Info");
+            Menu menu = new(["Visa Anställda", "Visa elever", "Visa kurser", "Tillbaka"], "Visa Info");
             switch (menu.MenuRun())
             {
                 case 0:
@@ -24,8 +24,6 @@ namespace DatabasProjekt
                     break;
                 case 2:
                     ReadCourses();
-                    break;
-                case 3:
                     break;
             }
         }
