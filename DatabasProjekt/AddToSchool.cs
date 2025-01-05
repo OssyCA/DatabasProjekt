@@ -233,10 +233,12 @@ namespace DatabasProjekt
                     return;
                 }
 
-                var student = context.Students.FirstOrDefault(s => s.StudentId == studentId);
-                if (student == null)
+                var student = context.Students.FirstOrDefault(s => s.StudentId == studentId); // Get the student by student id
+
+                if (student == null)    // Check if the student is null
                 {
                     Console.WriteLine("Studenten hittades inte.");
+                    Console.ReadLine();
                     return;
                 }
 
@@ -249,12 +251,12 @@ namespace DatabasProjekt
 
                 Console.WriteLine("Efternamn: ");
                 string lName = Console.ReadLine();
-                if (!string.IsNullOrEmpty(lName))
+                if (!string.IsNullOrEmpty(lName))   // Check if the input is not empty
                 {
                     student.LastName = lName;
                 }
 
-                Console.WriteLine("Klass: ");
+                Console.WriteLine("Klass: "); // Update the class of the student
                 if (int.TryParse(Console.ReadLine(), out int classId))
                 {
                     student.FkClassId = classId;
@@ -266,13 +268,24 @@ namespace DatabasProjekt
 
                 Console.WriteLine("Kön: ");
                 string gender = Console.ReadLine();
-                if (!string.IsNullOrEmpty(gender))
+
+                if (!string.IsNullOrEmpty(gender)) // Check if the input is not empty
                 {
                     student.Gender = gender;
                 }
 
-                context.SaveChanges();
-                Console.WriteLine("Studentens information har uppdaterats.");
+                try // Try to save the changes
+                {
+                    context.SaveChanges();
+                    Console.WriteLine("Studentens information har uppdaterats.");
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine(ex.Message);
+                }
+                Console.ReadLine();
+
             }
         }
         private int GetStudentId()
